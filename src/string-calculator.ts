@@ -1,9 +1,17 @@
 export const stringCalculator = (input: string): number => {
   let customSeperator = "";
+
+  function stringToRegex(input: string) {
+    return input.split("").map((c) => "[" + c + "]").join("");
+  }
+
   if(input.startsWith("//")){
     if (input[2] === "["){
-      const endCustom = input.indexOf("]", 3);
-      customSeperator = "|" + input.slice(3, endCustom).split("").map((c) => "[" + c + "]").join("");
+      let endPosition;
+      for (let position = input.indexOf("["); input[position] !== '\n'; position = endPosition + 1){
+        endPosition = input.indexOf("]", position)
+        customSeperator = "|" + stringToRegex(input.slice(position + 1, endPosition));
+      }
     }else {
       customSeperator += "|" + input[2];
     }

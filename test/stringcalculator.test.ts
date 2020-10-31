@@ -10,7 +10,8 @@ describe("String Calculator", () => {
     ["1\n2,3", 6],
     ["//;\n1;2", 3],
     ["1001, 2", 2],
-    ["//[***]\n1***2***3", 6]
+    ["//[***]\n1***2***3", 6],
+    ["//[*][%]\n1*2%3", 6]
   ]).test("returns %s for %s", (input, expected) => {
     expect(stringCalculator(input)).toEqual(expected);
   });
