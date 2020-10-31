@@ -7,7 +7,8 @@ describe("String Calculator", () => {
     ["1", 1],
     ["1,2", 3],
     ["1, 2, 3, 4, 5, 6", 21],
-    ["1\n2,3", 6]
+    ["1\n2,3", 6],
+    ["//;\n1;2", 3]
   ]).test("returns %s for %s", (input, expected) => {
     expect(stringCalculator(input)).toEqual(expected);
   });
