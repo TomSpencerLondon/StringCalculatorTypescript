@@ -1,43 +1,66 @@
 export const stringCalculator = (input: string): number => {
-  let customSeperator = "";
-
-  function stringToRegex(input: string) {
-    return input.split("").map((c) => "[" + c + "]").join("");
-  }
-
-  if(input.startsWith("//")){
-    if (input[2] === "["){
-      let endPosition;
-      for (let position = input.indexOf("["); input[position] !== '\n'; position = endPosition + 1){
-        endPosition = input.indexOf("]", position)
-        customSeperator = "|" + stringToRegex(input.slice(position + 1, endPosition));
-      }
-    }else {
-      customSeperator += "|" + input[2];
-    }
-
-    input = input.slice(input.indexOf("\n") + 1);
-
-  }
-  let regex = new RegExp("[,\n]" + customSeperator);
-  const array = input.split(regex).filter((n) => parseInt(n) <= 1000);
-  let negativeError = [];
-  const reducer = (accumulator, currentValue) => {
-    let number = parseInt(currentValue);
-    if (number < 0){
-      negativeError.push(number);
-    }
-    if (negativeError.length > 0){
-      return 0;
-    }
-    return accumulator + number;
-  };
-
-  const result = array.reduce(reducer, 0);
-
-  if (negativeError.length > 0){
-    throw new Error("error: negatives not allowed: " + negativeError.join(" "));
-  }
-
-  return result;
+  return performAdd(fixLargeNumbers(checkNegatives(stringToNumbers(input))));
 };
+
+const performAdd = (numbers: number[]) => {
+  return numbers.reduce((accumulator, number) => accumulator + number, 0);
+}
+
+// Split the specs into array of numbers
+const stringToNumbers = (args) => {
+  let config = getConfig(args);
+  let numbers = config.input.split("\n");
+  return splitOnDelimiters(numbers, config.delimiters);
+}
+
+const splitOnDelimiters = (numbers, delimiters) => {
+  if (delimiters.length === 0) {
+    return numbers.map(function (num) {
+      return (parseInt(num) || 0); // If +num is NaN be lenient and return 0
+    });
+  }
+  let delimiter = delimiters.pop();
+  let newNums = numbers.reduce(function (accumulator, number) {
+    return accumulator.concat(number.split(delimiter));
+  }, []);
+  return splitOnDelimiters(newNums, delimiters);
+}
+
+const checkNegatives = (numbers) => {
+  let negatives = numbers.filter((num) => {
+    return num < 0;
+  });
+  if (negatives.length > 0) {
+    throw new Error("error: negatives not allowed: " + negatives.join(" "));
+  } else {
+    return numbers;
+  }
+}
+
+function fixLargeNumbers(numbers) {
+  return numbers.filter(function (num) {
+    return num < 1000;
+  });
+}
+
+function getConfig(args) {
+  var matcher = /\/\/(.*?)\n/;
+  var result = matcher.exec(args);
+  if (result) {
+    return {delimiters: getDelimiters(result[1]), input: args.slice(matcher.lastIndex)};
+  } else {
+    return {delimiters: [","], input: args};
+  }
+}
+
+/*
+  This function extracts the delimiters from specs
+  e.g.
+  '[**]'    -> ['**']
+  '[**][%]' -> ['**', '%']
+ */
+function getDelimiters(args) {
+  return args.split(/\[|\]/).filter(function (delim) {
+    return !!delim.length;
+  });
+}
