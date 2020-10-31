@@ -5,6 +5,7 @@ const each = require("jest-each").default;
 describe("String Calculator", () => {
   each([
     ["1", 1],
+    ["1,2", 3]
   ]).test("returns %s for %s", (input, expected) => {
     expect(stringCalculator(input)).toEqual(expected);
   });

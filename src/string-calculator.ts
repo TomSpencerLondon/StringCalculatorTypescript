@@ -1,3 +1,6 @@
 export const stringCalculator = (input: string): number => {
-  return parseInt(input);
+  const array = input.split(",");
+  const reducer = (accumulator, currentValue) => accumulator + parseInt(currentValue);
+
+  return array.reduce(reducer, 0);
 };
