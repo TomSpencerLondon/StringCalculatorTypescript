@@ -1,11 +1,18 @@
 export const stringCalculator = (input: string): number => {
   let customSeperator = "";
   if(input.startsWith("//")){
-    customSeperator += input[2];
+    if (input[2] === "["){
+      const endCustom = input.indexOf("]", 3);
+      customSeperator = "|" + input.slice(3, endCustom).split("").map((c) => "[" + c + "]").join("");
+    }else {
+      customSeperator += "|" + input[2];
+    }
+
     input = input.slice(input.indexOf("\n") + 1);
+
   }
-  let regex = new RegExp("[,\n" + customSeperator + "]");
-  const array = input.split(regex).filter((n) => parseInt(n) < 1000);
+  let regex = new RegExp("[,\n]" + customSeperator);
+  const array = input.split(regex).filter((n) => parseInt(n) <= 1000);
   let negativeError = [];
   const reducer = (accumulator, currentValue) => {
     let number = parseInt(currentValue);
