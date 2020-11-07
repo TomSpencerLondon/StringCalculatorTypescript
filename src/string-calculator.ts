@@ -6,7 +6,6 @@ const performAdd = (numbers: number[]) => {
   return numbers.reduce((accumulator, number) => accumulator + number, 0);
 };
 
-// Split the specs into array of numbers
 const stringToNumbers = (args: string) => {
   const delimiters = getDelimiters(args);
   const numbers = args.split("\n");
@@ -26,16 +25,15 @@ const getDelimiters = (args) => {
 };
 
 const splitOnDelimiters = (numbers, delimiters) => {
-  if (delimiters.length === 0) {
-    return numbers.map(function (num) {
-      return parseInt(num) || 0; // If +num is NaN be lenient and return 0
-    });
+  for (const delimiter of delimiters) {
+    numbers = numbers.reduce((accumulator, number) => {
+      return accumulator.concat(number.split(delimiter));
+    }, []);
   }
-  const delimiter = delimiters.pop();
-  const newNums = numbers.reduce(function (accumulator, number) {
-    return accumulator.concat(number.split(delimiter));
-  }, []);
-  return splitOnDelimiters(newNums, delimiters);
+
+  return numbers.map((num) => {
+    return parseInt(num) || 0;
+  });
 };
 
 const checkNegatives = (numbers) => {
