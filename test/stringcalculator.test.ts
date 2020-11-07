@@ -1,4 +1,4 @@
-import {stringCalculator} from "../src/string-calculator";
+import { stringCalculator } from "../src/string-calculator";
 
 const each = require("jest-each").default;
 
@@ -11,7 +11,7 @@ describe("String Calculator", () => {
     ["//;\n1;2", 3],
     ["1001, 2", 2],
     ["//[***]\n1***2***3", 6],
-    ["//[*][%]\n1*2%3", 6]
+    ["//[*][%]\n1*2%3", 6],
   ]).test("returns %s for %s", (input, expected) => {
     expect(stringCalculator(input)).toEqual(expected);
   });
@@ -22,4 +22,4 @@ describe("String Calculator", () => {
     };
     expect(result).toThrow(new Error("error: negatives not allowed: -2 -3"));
   });
-})
+});

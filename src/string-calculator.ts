@@ -13,6 +13,19 @@ const stringToNumbers = (args) => {
   return splitOnDelimiters(numbers, config.delimiters);
 };
 
+const getConfig = (args) => {
+  const matcher = /\/\/(.*?)\n/;
+  const result = matcher.exec(args);
+  if (result) {
+    return {
+      delimiters: getDelimiters(result[1]),
+      input: args.slice(matcher.lastIndex),
+    };
+  } else {
+    return { delimiters: [","], input: args };
+  }
+};
+
 const splitOnDelimiters = (numbers, delimiters) => {
   if (delimiters.length === 0) {
     return numbers.map(function (num) {
@@ -37,24 +50,11 @@ const checkNegatives = (numbers) => {
   }
 };
 
-function fixLargeNumbers(numbers) {
+const fixLargeNumbers = (numbers) => {
   return numbers.filter(function (num) {
     return num < 1000;
   });
-}
-
-function getConfig(args) {
-  const matcher = /\/\/(.*?)\n/;
-  const result = matcher.exec(args);
-  if (result) {
-    return {
-      delimiters: getDelimiters(result[1]),
-      input: args.slice(matcher.lastIndex),
-    };
-  } else {
-    return { delimiters: [","], input: args };
-  }
-}
+};
 
 /*
   This function extracts the delimiters from specs
@@ -62,8 +62,8 @@ function getConfig(args) {
   '[**]'    -> ['**']
   '[**][%]' -> ['**', '%']
  */
-function getDelimiters(args) {
+const getDelimiters = (args) => {
   return args.split(/\[|\]/).filter(function (delim) {
     return !!delim.length;
   });
-}
+};
