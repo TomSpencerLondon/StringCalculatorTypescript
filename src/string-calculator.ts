@@ -17,7 +17,7 @@ const getDelimiters = (args): string[] => {
   const result = matcher.exec(args);
   if (result) {
     return result[1].split(/\[|\]/).filter((delim) => {
-      return !!delim.length;
+      return delim.length > 0;
     });
   } else {
     return [","];
