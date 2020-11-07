@@ -26,9 +26,7 @@ const getDelimiters = (args): string[] => {
 
 const splitOnDelimiters = (numbers, delimiters): number[] => {
   for (const delimiter of delimiters) {
-    numbers = numbers.reduce((accumulator, number) => {
-      return accumulator.concat(number.split(delimiter));
-    }, []);
+    numbers = numbers.flatMap((el: string) => el.split(delimiter));
   }
 
   return numbers.map((num) => {
