@@ -1,9 +1,7 @@
 import { stringCalculator } from "../src/string-calculator";
 
-const each = require("jest-each").default;
-
 describe("String Calculator", () => {
-  each([
+  it.each([
     ["1", 1],
     ["1,2", 3],
     ["1, 2, 3, 4, 5, 6", 21],
@@ -12,7 +10,7 @@ describe("String Calculator", () => {
     ["1001, 2", 2],
     ["//[***]\n1***2***3", 6],
     ["//[*][%]\n1*2%3", 6],
-  ]).test("returns %s for %s", (input, expected) => {
+  ])("returns %s for %s", (input: string, expected: number) => {
     expect(stringCalculator(input)).toEqual(expected);
   });
 

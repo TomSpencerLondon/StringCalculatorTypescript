@@ -7,22 +7,21 @@ const performAdd = (numbers: number[]) => {
 };
 
 // Split the specs into array of numbers
-const stringToNumbers = (args) => {
-  const config = getConfig(args);
-  const numbers = config.input.split("\n");
-  return splitOnDelimiters(numbers, config.delimiters);
+const stringToNumbers = (args: string) => {
+  const delimiters = getDelimiters(args);
+  const numbers = args.split("\n");
+  return splitOnDelimiters(numbers, delimiters);
 };
 
-const getConfig = (args) => {
+const getDelimiters = (args) => {
   const matcher = /\/\/(.*?)\n/;
   const result = matcher.exec(args);
   if (result) {
-    return {
-      delimiters: getDelimiters(result[1]),
-      input: args.slice(matcher.lastIndex),
-    };
+    return result[1].split(/\[|\]/).filter((delim) => {
+      return !!delim.length;
+    });
   } else {
-    return { delimiters: [","], input: args };
+    return [","];
   }
 };
 
@@ -53,17 +52,5 @@ const checkNegatives = (numbers) => {
 const fixLargeNumbers = (numbers) => {
   return numbers.filter(function (num) {
     return num < 1000;
-  });
-};
-
-/*
-  This function extracts the delimiters from specs
-  e.g.
-  '[**]'    -> ['**']
-  '[**][%]' -> ['**', '%']
- */
-const getDelimiters = (args) => {
-  return args.split(/\[|\]/).filter(function (delim) {
-    return !!delim.length;
   });
 };
