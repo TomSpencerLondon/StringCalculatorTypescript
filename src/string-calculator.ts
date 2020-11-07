@@ -2,17 +2,17 @@ export const stringCalculator = (input: string): number => {
   return performAdd(fixLargeNumbers(checkNegatives(stringToNumbers(input))));
 };
 
-const performAdd = (numbers: number[]) => {
+const performAdd = (numbers: number[]): number => {
   return numbers.reduce((accumulator, number) => accumulator + number, 0);
 };
 
-const stringToNumbers = (args: string) => {
+const stringToNumbers = (args: string): number[] => {
   const delimiters = getDelimiters(args);
   const numbers = args.split("\n");
   return splitOnDelimiters(numbers, delimiters);
 };
 
-const getDelimiters = (args) => {
+const getDelimiters = (args): string[] => {
   const matcher = /\/\/(.*?)\n/;
   const result = matcher.exec(args);
   if (result) {
@@ -24,7 +24,7 @@ const getDelimiters = (args) => {
   }
 };
 
-const splitOnDelimiters = (numbers, delimiters) => {
+const splitOnDelimiters = (numbers, delimiters): number[] => {
   for (const delimiter of delimiters) {
     numbers = numbers.reduce((accumulator, number) => {
       return accumulator.concat(number.split(delimiter));
@@ -36,7 +36,7 @@ const splitOnDelimiters = (numbers, delimiters) => {
   });
 };
 
-const checkNegatives = (numbers) => {
+const checkNegatives = (numbers): number[] => {
   const negatives = numbers.filter((num) => {
     return num < 0;
   });
@@ -47,7 +47,7 @@ const checkNegatives = (numbers) => {
   }
 };
 
-const fixLargeNumbers = (numbers) => {
+const fixLargeNumbers = (numbers): number[] => {
   return numbers.filter(function (num) {
     return num < 1000;
   });
